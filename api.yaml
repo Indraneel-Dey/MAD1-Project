@@ -1,0 +1,1129 @@
+openapi: 3.0.3
+info:
+  title: BlogliteAPI
+  description: 8 APIs of the Bloglite project app
+  version: 1.0
+
+components:
+  schemas:
+    password:
+      type: object
+      properties:
+        password:
+          type: string
+          description: password of user
+    user_read:
+      type: object
+      properties:
+        user_id:
+          type: number
+          description: ID of the user
+        email:
+          type: string
+          description: Email of the user
+        username:
+          type: string
+          description: Username of user
+        question:
+          type: string
+          description: Security question of user
+        age:
+          type: number
+          description: age of user in days
+        received:
+          type: number
+          description: Number of likes received by user
+        followers:
+          type: number
+          description: Number of followers of user
+    user_write:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email of the user
+        username:
+          type: string
+          description: Username of user
+        password:
+          type: string
+          description: Password of user
+        question:
+          type: string
+          description: Security question of user
+        answer:
+          type: string
+          description: Answer to security question
+    post_read:
+      type: object
+      properties:
+        post_id:
+          type: number
+          description: ID of the post
+        image:
+          type: string
+          description: Name of image of post
+        title:
+          type: string
+          description: Title of the post
+        description:
+          type: string
+          description: Caption of the post
+        age:
+          type: number
+          description: age of post in days
+        likes:
+          type: number
+          description: Number of likes on post
+        postername:
+          type: string
+          description: Username of the user who created the post
+    post_write:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the post
+        description:
+          type: string
+          description: Caption of the post
+        image:
+          type: string
+          description: Name of image of post
+        userId:
+          type: number
+          description: user_id of poster
+        password:
+          type: string
+          description: Password of poster
+    comment_read:
+      type: object
+      properties:
+        comment_id:
+          type: number
+          description: ID of the comment
+        contents:
+          type: string
+          description: Contents of the comment
+        age:
+          type: number
+          description: age of comment in days
+        likes:
+          type: number
+          description: Number of likes on comment
+        username:
+          type: string
+          description: Username of the user who created the comment
+    comment_write:
+      type: object
+      properties:
+        contents:
+          type: string
+          description: Contents of the comment
+        password:
+          type: string
+          description: Password of commenter
+    feed:
+      type: object
+      properties:
+        user_id:
+          type: number
+          description: ID of user
+        posts:
+          type: list
+          description: List of posts in feed
+        recommended:
+          type: list
+          description: Follow recommendation list
+    follow_read:
+      type: object
+      properties:
+        followed_people:
+          type: list
+          description: List of followed accounts
+    follow_write:
+      type: object
+      properties:
+        follow_id:
+          type: number
+          description: User id of account to be followed
+        password:
+          type: string
+          description: Password of user
+    block_read:
+      type: object
+      properties:
+        blocked_people:
+          type: list
+          description: List of blocked accounts
+    block_write:
+      type: object
+      properties:
+        block_id:
+          type: number
+          description: User id of account to be blocked
+        password:
+          type: string
+          description: Password of user
+    like_post_write:
+      type: object
+      properties:
+        post_id:
+          type: number
+          description: ID of post to be liked
+        password:
+          type: string
+          description: password of user
+    like_comment_write:
+      type: object
+      properties:
+        comment_id:
+          type: number
+          description: ID of comment to be liked
+        password:
+          type: string
+          description: password of user
+
+paths:
+  "/user/{user_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+    get:
+      tags: ["user"]
+      summary: Returns information of user with given user_id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_read"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    put:
+      tags: ["user"]
+      summary: Update user with given user_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_write"
+        required: true
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/user_read"
+          "404":
+            description: user not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "400":
+            description: bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "409":
+            description: conflict
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "500":
+            description: internal server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+    delete:
+      tags: ["user"]
+      summary: Delete the user with given user_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/password"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  "/user":
+    post:
+      tags: ["user"]
+      summary: Create a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully created a user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_read"
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  "/post/{post_id}":
+    parameters:
+      - name: post_id
+        in: path
+        description: ID of the post
+        required: true
+        schema:
+          type: number
+    get:
+      tags: ["post"]
+      summary: Returns information of post with given post_id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post_read"
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    put:
+      tags: ["post"]
+      summary: Update post with given post_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/post_write"
+        required: true
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/post_read"
+          "404":
+            description: post not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "400":
+            description: bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "409":
+            description: conflict
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "500":
+            description: internal server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+    delete:
+      tags: ["post"]
+      summary: Delete the post with given post_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/password"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "404":
+          description: post not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  "/post":
+    post:
+      tags: ["post"]
+      summary: Create a new post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/post_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully created a post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post_read"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  "/comment/{comment_id}":
+    parameters:
+      - name: comment_id
+        in: path
+        description: ID of the comment
+        required: true
+        schema:
+          type: number
+    get:
+      tags: ["comment"]
+      summary: Returns information of comment with given comment_id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment_read"
+        "404":
+          description: comment not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    put:
+      tags: ["comment"]
+      summary: Update comment with given comment_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/comment_write"
+        required: true
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/comment_read"
+          "404":
+            description: comment not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "400":
+            description: bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "409":
+            description: conflict
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+          "500":
+            description: internal server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: {}
+    delete:
+      tags: ["comment"]
+      summary: Delete the comment with given comment_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/password"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "404":
+          description: comment not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  "/comment/{user_id}/{post_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the commenter
+        required: true
+        schema:
+          type: number
+      - name: post_id
+        in: path
+        description: ID of the post
+        required: true
+        schema:
+          type: number
+    post:
+      tags: ["comment"]
+      summary: Create a new comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/comment_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully created a post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment_read"
+        "404":
+          description: user/post not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  "/feed/{user_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+    get:
+      tags: ["feed"]
+      summary: Displays feed of user with given user_id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/feed"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  "/follow/{user_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+    get:
+      tags: ["follow"]
+      summary: Returns list of followed accounts of user with given user_id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/follow_read"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    post:
+      tags: ["follow"]
+      summary: User with given user_id follows another user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/follow_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully followed a user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/follow_read"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  "/follow/{user_id}/{follow_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+      - name: follow_id
+        in: path
+        description: ID of the followed account
+        required: true
+        schema:
+          type: number
+    delete:
+      tags: ["follow"]
+      summary: Unfollow the user with given follow_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/password"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  "/block/{user_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+    get:
+      tags: ["block"]
+      summary: Returns list of blocked accounts of user with given user_id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/block_read"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    post:
+      tags: ["block"]
+      summary: User with given user_id blocks another user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/block_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully blocked a user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/block_read"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  "/block/{user_id}/{block_id}":
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+      - name: block_id
+        in: path
+        description: ID of the blocked account
+        required: true
+        schema:
+          type: number
+    delete:
+      tags: ["block"]
+      summary: Unblock the user with given block_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/password"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  /like_post/{user_id}:
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+    post:
+      tags: ["like_post"]
+      summary: User with given user_id likes a post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/like_post_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully liked a post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post_read"
+        "404":
+          description: user/post not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    delete:
+      tags: ["like_post"]
+      summary: User with given user_id removes like on a post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/like_post_write"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post_read"
+        "404":
+          description: user/post not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+
+  /like_comment/{user_id}:
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: number
+    post:
+      tags: ["like_comment"]
+      summary: User with given user_id likes a comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/like_comment_write"
+        required: true
+      responses:
+        "201":
+          description: Successfully liked a comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment_read"
+        "404":
+          description: user/post/comment not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    delete:
+      tags: ["like_comment"]
+      summary: User with given user_id removes like on a comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/like_comment_write"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment_read"
+        "404":
+          description: user/post/comment not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
