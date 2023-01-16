@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <h5>
+        <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/logout">Log Out</a>
+    </h5><br><br><br>
+    <div style="text-align: right;">
+        Search User &nbsp;&nbsp;&nbsp;
+        <form action="/search_user" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: right;">
+        Search Post &nbsp;&nbsp;&nbsp;
+        <form action="/search_post" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <h1>About Blog Lite Project</h1>
+    <h2>This application was made by Indraneel Dey (Roll number 21f3002696) for his Modern Application Development 1 course project
+    in the <a href="http://www.onlinedegree.iitm.ac.in">IIT Madras Online Degree Program for Data Science and Programming</a></h2><br>
+    <h2>Current number of accounts: {{ count }}</h2>
+    <h2>Contact me at 21f3002696@student.onlinedegree.iitm.ac.in</h2>
+
+{% endblock %}

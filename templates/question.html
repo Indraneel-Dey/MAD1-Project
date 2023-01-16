@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='forms.css') }}"
+        type="text/css"
+    />
+
+{% endblock %}
+
+{% block content %}
+    <div>
+    <h1>Don't want to change security question? <a href="/settings">Go back</a></h1>
+    <h2>{{ message }}</h2>
+    </div>
+    <div class="form-wrapper">
+      <h2 class="title">Change Security Question</h2>
+
+      <form method="POST" action="/question">
+          {{ form.csrf_token }}
+
+          <fieldset class="form-field">{{ form.question.label }} {{ form.question }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.answer.label }} {{ form.answer }}
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+    </div>
+
+{% endblock %}

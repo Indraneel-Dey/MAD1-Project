@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <h5>
+        <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/logout">Log Out</a>
+    </h5>
+    <div style="text-align: right;">
+        Search User &nbsp;&nbsp;&nbsp;
+        <form action="/search_user" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: right;">
+        Search Post &nbsp;&nbsp;&nbsp;
+        <form action="/search_post" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: center;">
+        <br>
+        <form method="POST" action="/followers">
+            <input type="submit" value="Create new Post" class="btn btn-primary">
+        </form>
+        <h1>My Followers</h1>
+        {% if followers|length == 0 %}
+        <h3>You don't have any followers</h3>
+        {% endif %}
+        {% if followers|length > 0 %}
+        <table class="table" style="width:600px; text-align: left; margin-left: auto; margin-right: auto; border-spacing: 10px;">
+        <tr>
+            <th></th>
+            <th>User</th>
+            <th></th>
+            <th style="text-align: center;">Action</th>
+        </tr>
+        {% for follow in followers %}
+        <tr>
+            <td><a href="/user/{{ follow.user_id }}">#{{ loop.index }}</a></td>
+            <td><a href="/user/{{ follow.user_id }}">{{ follow.username }}</a></td>
+            <td>{% if follow.level == 2 %}&nbsp;<b>[MODERATOR]</b>{% endif %}
+            {% if follow.level == 3 %}&nbsp;<b>[ADMINISTRATOR]</b>{% endif %}
+            {% if follow.level == 0 %}&nbsp;<b>[BANNED]</b>{% endif %}</td>
+            <td class="rows"><form method="POST" action="/follow2/{{ follow.user_id }}" class="col-lg-6">
+            {% if follow not in user.follows and follow not in user.blocked and follow.level > 0 %}
+            <button type="submit" class="btn btn-info">Follow</button>
+            {% endif %}
+            {% if follow in user.follows and follow.level > 0 %}
+            <button type="submit" class="btn btn-info">Unfollow</button>
+            {% endif %}
+            </form>
+            <form method="POST" action="/block2/{{ follow.user_id }}" class="col-lg-6">
+            {% if follow not in user.follows and follow not in user.blocked %}
+            <button type="submit" class="btn btn-info">Block</button>
+            {% endif %}
+            {% if follow in user.blocked %}
+            <button type="submit" class="btn btn-info">Unblock</button>
+            {% endif %}
+            </form></td>
+        </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}

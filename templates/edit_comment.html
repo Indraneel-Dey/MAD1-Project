@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='forms.css') }}"
+        type="text/css"
+    />
+
+{% endblock %}
+
+{% block content %}
+    <div>
+    <h5>
+      <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/logout">Log Out</a>
+    </h5>
+    <div class="form-wrapper">
+      <h2 class="title">Edit Comment</h2>
+      <form method="POST" action="/edit_comment/{{ comment.post_id }}/{{ comment.comment_id }}">
+          {{ form.csrf_token }}
+          <fieldset class="form-field">{{ form.content.label }} {{ form.content }}
+          </fieldset>
+          {{ form.submit }}
+      </form>
+    </div>
+    </div>
+
+{% endblock %}

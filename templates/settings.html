@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+<style>
+    .submit {
+    background: #5eb9d7;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    margin-top: 15px;
+    font-weight: 400;
+    border: 1px solid #5eb9d7;
+    line-height: 1;
+    transition: all .3s ease-out;
+    width: 100px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center;">
+        <h5>
+            <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/logout">Log Out</a>
+        </h5>
+        <div style="text-align: right;">
+            Search User &nbsp;&nbsp;&nbsp;
+            <form action="/search_user" method="POST">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div style="text-align: right;">
+            Search Post &nbsp;&nbsp;&nbsp;
+            <form action="/search_post" method="POST">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <h1>Settings</h1>
+        <table class="table" style="width:600px; text-align: left; margin-left: auto; margin-right: auto; border-spacing: 10px;">
+            <tr>
+                <td>Username</td>
+                <td style="text-align: right;">{{ user.username }}</td>
+                <td><a href="/name" class="btn btn-warning">Change</a></td>
+            </tr>
+            <tr>
+                <td>Email Address</td>
+                <td style="text-align: right;">{{ user.email }}</td>
+                <td><a href="/email" class="btn btn-warning">Change</a></td>
+            </tr>
+            <tr>
+                <td>Question</td>
+                <td style="text-align: right;">{{ user.question }}</td>
+                <td><a href="/question" class="btn btn-warning">Change</a></td>
+            </tr>
+        </table><br><br>
+        <form method="POST" action="/settings" class="form-inline">
+            {{ form.csrf_token }}
+            <fieldset class="form-field">{{ form.color.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ form.color }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ form.submit(class='submit') }}</fieldset>
+        </form>
+        <br><br>
+        <form method="POST" action="/sort" class="form-inline">
+            {{ form.csrf_token }}
+            <fieldset class="form-field">{{ form2.sort.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ form2.sort }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ form2.submit(class='submit') }}</fieldset>
+        </form><br><br>
+        <form method="POST" action="/delete_account">
+            <input type="submit" value="Delete Account" class="btn btn-danger"
+                    onclick="return confirm('Are you sure you want to delete your account?')">
+        </form>
+    </div>
+
+{% endblock %}

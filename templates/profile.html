@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+        <h5>
+            <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/logout">Log Out</a>
+        </h5>
+        <div style="text-align: right;">
+            Search User &nbsp;&nbsp;&nbsp;
+            <form action="/search_user" method="POST">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div style="text-align: right;">
+            Search Post &nbsp;&nbsp;&nbsp;
+            <form action="/search_post" method="POST">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    <div class="col-lg-6" style="text-align: center">
+        {% if user.posts|length > 0 %}
+        <h1>Top post</h1>
+        <p class="title">
+            <b>
+                <a href="/post/{{ post.post_id }}">
+                    {{ post.title }}
+                </a>
+            </b>
+        </p>
+        <div>
+            <a href="/post/{{ post.post_id }}">
+                <img src="/static/{{ post.image }}" alt="no image" width="200" height="200">
+            </a>
+        </div>
+        <div class="content">
+            <p>{{ post.description }}</p>
+        </div>
+        <div>Likes: {{ post.likes }}</div>
+        {% endif %}
+        {% if user.comments|length > 0 %}
+        <h1>Top comment</h1>
+        <a href="/post/{{ comment.post_id }}">{{ comment.contents }}</a><br>
+        Likes: {{ comment.likes }}
+        {% endif %}
+    </div>
+    <div class="col-lg-6" style="text-align: center">
+        <h1>User Profile
+        {% if user.level == 2 %}&nbsp;<b>[MODERATOR]</b>{% endif %}
+        {% if user.level == 3 %}&nbsp;<b>[ADMINISTRATOR]</b>{% endif %}
+        {% if user.level == 0 %}&nbsp;<b>[BANNED]</b>{% endif %}</h1>
+        <table class="table" style="width:700px; text-align: center; margin-left: auto; margin-right: auto; border=spacing: 10px;">
+            <tr>
+                <td>Username:</td><td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td>Email:</td><td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>Age of account:</td><td>{{ user.age }} days</td>
+            </tr>
+            <tr>
+                <td>Followed by:</td><td><a href="/followers">{{ user.followers }}</a></td>
+            </tr>
+            <tr>
+                <td>Followed accounts:</td><td><a href="/followed">{{ user.follows|length }}</a></td>
+            </tr>
+            <tr>
+                <td>Total posts by user:</td><td><a href="/my_posts">{{ user.posts|length }}</a></td>
+            </tr>
+            <tr>
+                <td>Comments by user:</td><td><a href="/comments">{{ user.comments|length }}</a></td>
+            </tr>
+            <tr>
+                <td>Liked posts:</td><td><a href="/liked_post">{{ user.liked_post|length }}</a></td>
+            </tr>
+            <tr>
+                <td>Liked comments:</td><td><a href="/liked_comment">{{ user.liked_comment|length }}</a></td>
+            </tr>
+            <tr>
+                <td>Likes received:</td><td>{{ user.received }}</td>
+            </tr>
+        </table>
+        <a href="/static/user.{{ user.user_id }}.docx" class="btn" download><i class="fa fa-download"></i> Download</a>
+    </div>
+
+{% endblock %}

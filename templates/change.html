@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='forms.css') }}"
+        type="text/css"
+    />
+
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-lg-6">
+    <h1>Don't want to change password? <a href="{{ url_for('login') }}">Login</a></h1>
+    <h2>{{ message }}</h2>
+    </div>
+    <div class="form-wrapper col-lg-6">
+      <h2 class="title">Change Password</h2>
+
+      <form method="POST" action="{{ url_for('change') }}">
+          {{ form.csrf_token }}
+
+          <fieldset class="form-field">{{ form.name.label }} {{ form.name(size=20) }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.old_password.label }} {{ form.old_password }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.new_password.label }} {{ form.new_password }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.confirmPassword.label }} {{ form.confirmPassword }}
+            {% if form.confirmPassword.errors %}
+              <ul class="errors">
+                  <li class="error">
+                      <i class="fa fa-exclamation"></i> <span class="error-message">{{ form.confirmPassword.errors[0] }}</span>
+                  </li>
+              </ul>
+            {% endif %}
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+    </div>
+    </div>
+
+{% endblock %}

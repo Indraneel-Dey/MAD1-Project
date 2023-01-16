@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='forms.css') }}"
+        type="text/css"
+    />
+
+{% endblock %}
+
+{% block content %}
+    <div>
+    <h5>
+      <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/logout">Log Out</a>
+    </h5>
+    <div class="form-wrapper">
+      <h2 class="title">Edit Post</h2>
+      <form method="POST" action="/edit_post/{{ post_id }}" enctype="multipart/form-data">
+          {{ form.csrf_token }}
+          <fieldset class="form-field">{{ form.title.label }} {{ form.title(size=30) }}
+          </fieldset>
+          <fieldset class="form-field">{{ form.description.label }} {{ form.description }}
+          </fieldset>
+          <fieldset class="form-field">{{ form.photo.label }} {{ form.photo }}
+          </fieldset>
+          {{ form.submit }}
+      </form>
+    </div>
+    </div>
+
+{% endblock %}

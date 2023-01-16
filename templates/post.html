@@ -1,0 +1,134 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <h5>
+        <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/logout">Log Out</a>
+    </h5>
+    <div style="text-align: right;">
+        Search User &nbsp;&nbsp;&nbsp;
+        <form action="/search_user" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: right;">
+        Search Post &nbsp;&nbsp;&nbsp;
+        <form action="/search_post" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div class='post row' style="text-align: center;">
+        <div class="col-lg-6">
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Posted By <a href="/user/{{ post.poster_id }}">{{ post.poster_name }}</a>
+        {% if poster.level == 2 %}&nbsp;<b>[MODERATOR]</b>{% endif %}
+        {% if poster.level == 3 %}&nbsp;<b>[ADMINISTRATOR]</b>{% endif %}
+        {% if poster.level == 0 %}&nbsp;<b>[BANNED]</b>{% endif %}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ post.age }} days ago</p>
+        <p class="title"><b>{{ post.title }}</b></p>
+        <div>
+            <img src="/static/{{ post.image }}" alt="no image" width="500" height="500">
+        </div>
+        <div class="content">
+            <p>{{ post.description }}</p>
+        </div>
+        {% if post in user.posts %}
+            <form method="POST" action="/delete_post/{{ post.post_id }}">
+                <div>
+                {% if post.archived == 0 and post.age < 1 and post.likes == 0 %}
+                <input type="submit" class="btn btn-warning" formaction="/edit_post/{{ post.post_id }}" formmethod="GET" value="Edit Post">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {% endif %}
+                <input type="submit" value="Delete Post" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete this post?')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {% if post.archived == 0 %}
+                <input type="submit" class="btn btn-info" formaction="/{{ post.post_id }}/archive" value="Archive Post">
+                {% endif %}
+                </div>
+            </form>
+        {% endif %}
+        {% if post not in user.posts and post.archived == 0 %}
+        <form method="POST" action="/like_post/{{ post.post_id }}">
+        {% if post in user.liked_post %}
+        <div>Liked <button style="font-size: 24px"><i class="fa fa-heart" style="color: red;"> </i> </button></div>
+        {% endif %}
+        {% if post not in user.liked_post %}
+        <div>Like <button style="font-size: 24px"><i class="fa fa-heart"> </i> </button></div>
+        {% endif %}
+        </form>
+        {% endif %}
+        Likes: {{ post.likes }}
+        <a href="/static/post.{{ post.post_id }}.docx" class="btn" download><i class="fa fa-download"></i> Download</a>
+        <hr>
+        </div>
+        <div class="col-lg-6">
+        {% if post.archived == 1 %}
+        <h2>ARCHIVED</h2>
+        {% if post.poster_id == user.user_id %}
+        <form action="/{{ post.post_id }}/archive" method="POST">
+        <button type="submit" class="btn btn-info">Make Public</button>
+        </form>
+        {% endif %}
+        {% endif %}
+        {% if post.active == 1 %}
+        <h2>Comments turned off</h2>
+        {% if post.poster_id == user.user_id %}
+        <form action="/{{ post.post_id }}/enable" method="POST">
+        <input type="submit" value="Enable Comments" class="btn btn-warning" onclick="return confirm('You cannot turn off comments after enabling them')">
+        </form>
+        {% endif %}
+        {% endif %}
+        {% if post.active == 0 %}
+        <h3>Comments ({{ post.reviews|length }})</h3>
+        {% if post.archived == 0 %}
+        <form method="POST" action="/post/{{ post.post_id }}">
+        {{ form.csrf_token }}
+        <fieldset class="form-field">{{ form.content(cols='60', rows='5') }}
+        </fieldset>
+        {{ form.submit(class_='btn btn-primary') }}
+        </form>
+        {% endif %}
+        {% for comment in post.reviews %}
+        <div class="comment">
+            <p>#{{ loop.index }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Commented by <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ comment.age }} days ago at {{ comment.time }}</p>
+            <p>{{ comment.contents }}</p>
+            <div class="col-lg-6">
+            {% if comment in user.comments %}
+            <form method="POST" action="/delete_comment/{{ post.post_id }}/{{ comment.comment_id }}">
+                <div class="btn-group">
+                {% if post.archived == 0 and comment.age < 1 and comment.likes == 0 %}
+                <input type="submit" class="btn btn-warning" formaction="/edit_comment/{{ post.post_id }}/{{ comment.comment_id }}" formmethod="GET" value="Edit Comment">
+                {% endif %}
+                <input type="submit" value="Delete Comment" class="btn btn-danger"
+                    onclick="return confirm('Are you sure you want to delete this entry?')">
+                </div>
+            </form>
+            {% endif %}
+            {% if comment not in user.comments and post.archived == 0 %}
+            <form method="POST" action="/like_comment/{{ post.post_id }}/{{ comment.comment_id }}">
+            {% if comment in user.liked_comment %}
+            <div>Liked <button style="font-size: 24px"><i class="fa fa-heart" style="color: red;"> </i> </button></div>
+            {% endif %}
+            {% if comment not in user.liked_comment %}
+            <div>Like <button style="font-size: 24px"><i class="fa fa-heart"> </i> </button></div>
+            {% endif %}
+            </form>
+            {% endif %}
+            </div>
+            <div class="col-lg-6">
+            Likes: {{ comment.likes }}
+            </div>
+        </div><br><br><br>
+        {% endfor %}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

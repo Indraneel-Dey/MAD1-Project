@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center;">
+        <h5>
+            <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/logout">Log Out</a>
+        </h5>
+        <div style="text-align: right;">
+            Search User &nbsp;&nbsp;&nbsp;
+            <form action="/search_user" method="POST">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div style="text-align: right;">
+            Search Post &nbsp;&nbsp;&nbsp;
+            <form action="//search_post" method="POST">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <h1>Chatbot to provide help</h1>
+        <iframe
+        allow="microphone;"
+        width="350"
+        height="430"
+        src="https://console.dialogflow.com/api-client/demo/embedded/fa6a29c9-4c1c-4f74-82a8-134763f2a7c0">
+        </iframe>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <h5>
+        <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/logout">Log Out</a>
+    </h5>
+    <div style="text-align: right;">
+        Search User &nbsp;&nbsp;&nbsp;
+        <form action="/search_user" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: right;">
+        Search Post &nbsp;&nbsp;&nbsp;
+        <form action="/search_post" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: center;">
+        <br>
+        <h1>Search results</h1>
+        {% if users|length == 0 %}
+        <h3>No search results found</h3>
+        {% endif %}
+        {% if users|length > 0 %}
+        <table class="table" style="width:600px; text-align: left; margin-left: auto; margin-right: auto; border-spacing: 10px;">
+        <tr>
+            <th></th>
+            <th>Users</th>
+            <th></th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td><a href="/user/{{ user.user_id }}">#{{ loop.index }}</a></td>
+            <td><a href="/user/{{ user.user_id }}">{{ user.username }}</a></td>
+            <td>{% if user.level == 2 %}&nbsp;<b>[MODERATOR]</b>{% endif %}
+            {% if user.level == 3 %}&nbsp;<b>[ADMINISTRATOR]</b>{% endif %}
+            {% if user.level == 0 %}&nbsp;<b>[BANNED]</b>{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}

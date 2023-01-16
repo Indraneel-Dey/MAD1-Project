@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='forms.css') }}"
+        type="text/css"
+    />
+
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-lg-6">
+    <h1>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></h1>
+    <h2>{{ message }}</h2>
+    </div>
+    <div class="form-wrapper col-lg-6">
+      <h2 class="title">Login</h2>
+
+      <form method="POST" action="{{ url_for('login') }}">
+          {{ form.csrf_token }}
+
+          <fieldset class="form-field">{{ form.name.label }} {{ form.name(size=5) }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.password.label }} {{ form.password }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              <div class="col-lg-2">{{ form.status }}</div>
+              <div class="col-lg-10">{{ form.status.label }}</div>
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+        <a href="{{ url_for('change') }}">Change Password</a><br>
+        <a href="{{ url_for('forgot') }}">Forgot Password</a>
+    </div>
+    </div>
+
+{% endblock %}

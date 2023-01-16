@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='forms.css') }}"
+        type="text/css"
+    />
+
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-lg-6">
+    <h1>Already have an account? <a href="{{ url_for('login') }}">Login</a></h1>
+    <h4>Enter a valid email id, unique username, strong password and an answer for a security question that will be used for recovering forgotten password</h4><br>
+        <h2>{{ message }}</h2>
+    </div>
+    <div class="form-wrapper col-lg-6">
+      <h2 class="title">Sign Up</h2>
+
+      <form method="POST" action="{{ url_for('signup') }}">
+          {{ form.csrf_token }}
+
+          <fieldset class="form-field">{{ form.email.label }} {{ form.email }}
+            {% if form.email.errors %}
+              <ul class="errors">
+                  <li class="error">
+                      <i class="fa fa-exclamation"></i> <span class="error-message">{{ form.email.errors[0] }}</span>
+                  </li>
+              </ul>
+            {% endif %}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.name.label }} {{ form.name(size=20) }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.password.label }} {{ form.password }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.confirmPassword.label }} {{ form.confirmPassword }}
+            {% if form.confirmPassword.errors %}
+              <ul class="errors">
+                  <li class="error">
+                      <i class="fa fa-exclamation"></i> <span class="error-message">{{ form.confirmPassword.errors[0] }}</span>
+                  </li>
+              </ul>
+            {% endif %}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.question.label }} {{ form.question }}
+          </fieldset>
+
+          <fieldset class="form-field">{{ form.answer.label }} {{ form.answer }}
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+    </div>
+    </div>
+
+{% endblock %}

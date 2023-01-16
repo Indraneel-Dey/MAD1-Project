@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <h5>
+        <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/logout">Log Out</a>
+    </h5>
+    <div style="text-align: right;">
+        Search User &nbsp;&nbsp;&nbsp;
+        <form action="/search_user" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: right;">
+        Search Post &nbsp;&nbsp;&nbsp;
+        <form action="/search_post" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: center;">
+        <br>
+        <form method="POST" action="/liked_comment">
+            <input type="submit" value="Create new Post" class="btn btn-primary">
+        </form>
+        <h1>Liked Comments</h1>
+        {% if user.liked_comment|length == 0 %}
+        <h3>You haven't liked any comments</h3>
+        {% endif %}
+        {% if user.liked_comment|length > 0 %}
+        <table class="table" style="width:600px; text-align: left; margin-left: auto; margin-right: auto; border-spacing: 10px;">
+        <tr>
+            <th></th>
+            <th>Commented by</th>
+            <th>Comment</th>
+            <th>Likes</th>
+            <th style="text-align: center;">Action</th>
+        </tr>
+        {% for comment in temp %}
+            <tr>
+                <td>#{{ loop.index }}</td>
+                <td><a href="/user/{{ comment[3] }}">{{ comment[0] }}</a></td>
+                <td><a href="/post/{{ comment[4] }}">{{ comment[1] }}</a></td>
+                <td>{{ comment[2] }}</td>
+                <td style="text-align-center;">{% if comment[5].archived == 0 %}
+                    <form method="POST" action="/like_comment2/{{ comment[4] }}/{{ comment[6] }}">
+                    Liked <button style="font-size: 24px"><i class="fa fa-heart" style="color: red;"> </i> </button>
+                    </form>
+                    {% endif %}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}

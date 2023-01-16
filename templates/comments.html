@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <h5>
+        <a href="/feed">Feed</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/about">About us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/help">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/settings">Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/logout">Log Out</a>
+    </h5>
+    <div style="text-align: right;">
+        Search User &nbsp;&nbsp;&nbsp;
+        <form action="/search_user" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: right;">
+        Search Post &nbsp;&nbsp;&nbsp;
+        <form action="/search_post" method="POST">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    <div style="text-align: center;">
+        <br>
+        <form method="POST" action="/comments">
+            <input type="submit" value="Create new Post" class="btn btn-primary">
+        </form>
+        <h1>My Comments</h1>
+        {% if user.comments|length == 0 %}
+        <h3>You haven't made any comments</h3>
+        {% endif %}
+        {% if user.comments|length > 0 %}
+        <table class="table" style="width:600px; text-align: left; margin-left: auto; margin-right: auto; border-spacing: 10px;">
+        <tr>
+            <th></th>
+            <th>Comment</th>
+            <th>Likes</th>
+        </tr>
+        {% for comment in user.comments %}
+        <tr>
+            <td><a href="/post/{{ comment.post_id }}">#{{ loop.index }}</a></td>
+            <td>{{ comment.contents }}</td>
+            <td>{{ comment.likes }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}
