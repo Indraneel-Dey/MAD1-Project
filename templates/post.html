@@ -98,7 +98,7 @@
         {% for comment in post.reviews %}
         <div class="comment">
             <p>#{{ loop.index }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Commented by <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ comment.age }} days ago at {{ comment.time }}</p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ comment.age }} days ago</p>
             <p>{{ comment.contents }}</p>
             <div class="col-lg-6">
             {% if comment in user.comments %}
